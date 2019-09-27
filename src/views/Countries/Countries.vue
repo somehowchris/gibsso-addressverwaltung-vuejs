@@ -10,7 +10,7 @@
               :class="validInput(1) || query === undefined ? '' : 'has-danger'"
             >
               <input
-                type="email"
+                type="text"
                 class="form-control form-control-alternative"
                 :class="validInput(1) || query === undefined ? '' : 'is-invalid'"
                 id="exampleFormControlInput1"
@@ -43,7 +43,10 @@
         <hr />
         <div class="row">
           <div class="col-12">
-            <table class="table">
+            <table
+              class="table"
+              v-if="countries && countries instanceof Array && countries.length > 0"
+            >
               <thead>
                 <tr>
                   <th scope="col">Land</th>
@@ -58,6 +61,9 @@
                 </tr>
               </tbody>
             </table>
+            <div v-else>
+              <p style="text-align:center;">No countries found</p>
+            </div>
           </div>
         </div>
       </div>
