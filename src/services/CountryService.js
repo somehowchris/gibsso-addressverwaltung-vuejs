@@ -1,3 +1,4 @@
+/* eslint-disable arrow-parens */
 import httpService from './httpService';
 
 const getCountries = async () => {
@@ -15,9 +16,7 @@ const updateCountry = async (country, id) => {
   return { ...data, selected: false };
 };
 
-const deleteCountry = (id) => {
-  return httpService.delete(`/countries/${id}`);
-};
+const deleteCountry = (id) => httpService.delete(`/countries/${id}`);
 
 export default {
   createCountry,

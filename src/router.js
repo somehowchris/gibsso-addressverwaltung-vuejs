@@ -19,7 +19,7 @@ export default new Router({
       children: [
         {
           path: ':id',
-          component: () => import('./views/Countries/Countries.vue')
+          component: () => import('./views/Countries/Countries.vue'),
         },
       ],
     },
@@ -27,6 +27,12 @@ export default new Router({
       path: '/towns',
       name: 'Towns',
       component: () => import('./views/Towns/Towns.vue'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('./views/Towns/Towns.vue'),
+        },
+      ],
     },
     {
       path: '/people',

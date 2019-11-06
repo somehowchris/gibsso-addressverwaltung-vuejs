@@ -1,15 +1,19 @@
+/* eslint-disable implicit-arrow-linebreak */
+/* eslint-disable comma-dangle */
+/* eslint-disable max-len */
+/* eslint-disable no-nested-ternary */
+/* eslint-disable no-extra-boolean-cast */
 /* eslint-disable indent */
 /* eslint-disable no-param-reassign */
 /* eslint-disable no-unused-expressions */
-
+// TODO move search to store
 import { mapActions, mapState, mapMutations } from 'vuex';
-import CountryService from '@/services/CountryService.js';
+import CountryService from '@/services/CountryService';
 
 export default {
   name: 'countries',
   data: () => ({
     query: undefined,
-    originalName: '',
   }),
   async created() {
     await this.loadCountries();
@@ -30,26 +34,21 @@ export default {
         });
     },
     select(select) {
-      if (this.selectedCountry ? select.id !== this.selectedCountry.id : true) {
+      if (!!this.selectedCountry ? select.id !== this.selectedCountry.id : true) {
         this.countries.forEach((el) => {
           el.selected = false;
         });
         const toSet = this.countries.find(el => el.id === select.id);
 
-        toSet ? (toSet.selected = true) : undefined;
-
-        this.$router.push({ path: this.selectedCountry ? `/countries/${this.selectedCountry.id}` : '/countries' }).catch(() => { });
+        toSet ? (toSet.selected = true) : this.$router.push({ path: '/countries' });
       }
+      this.$router.push({ path: `/countries/${this.selectedCountry.id}` }).catch(() => { });
     },
     unset() {
-      this.selectedCountry
-        ? (this.selectedCountry.name = this.originalName)
-        : undefined;
       this.countries.forEach((el) => {
         el.selected = false;
       });
       this.query = undefined;
-      this.originalName = '';
       this.$router.push({ query: undefined, path: '/countries' }).catch(() => { });
     },
     save() {
@@ -59,7 +58,7 @@ export default {
           this.countries.push(el);
           this.select(el);
         })
-        : CountryService.updateCountry(this.selectedCountry, this.selectedCountry.id).then((el) => {
+        : CountryService.updateCountry({ name: this.query }, this.selectedCountry.id).then((el) => {
           this.unset();
           // eslint-disable-next-line no-confusing-arrow
           this.setCountries(this.countries.map(country => country.id === el.id ? el : country));
@@ -76,7 +75,12 @@ export default {
       return this.countries instanceof Array ? this.countries.find(el => !!el.selected) : undefined;
     },
     validInput() {
-      return (minChars = 0) => this.query && this.query.length >= minChars;
+      return (minChars = 0) =>
+        this.query
+        && this.query.length >= minChars
+        && this.query.match(/^[a-zA-ZäöüÄÖÜ -]{2,}$/)
+        && (!this.countries ? true : this.countries.filter(el =>
+          (this.hasSelected ? (this.selectedCountry.name === this.query ? false : el.name === this.query) : el.name === this.query)).length === 0);
     },
     getCountries() {
       return this.query && !this.selectedCountry
@@ -85,27 +89,15 @@ export default {
     },
   },
   watch: {
-    selectedCountry(newVal, oldVal) {
-      if (
-        oldVal
-        && (newVal ? oldVal.id !== newVal.id : true)
-        && this.originalName
-      ) {
-        this.countries.find(el => el.id === oldVal.id).name = this.originalName;
-      }
+    selectedCountry() {
       if (this.selectedCountry) {
         this.query = this.selectedCountry.name;
-        if (oldVal && newVal ? oldVal.id !== newVal.id : true) {
-          this.originalName = this.selectedCountry.name;
-        }
       }
     },
     query() {
-      if (this.hasSelected) {
-        this.selectedCountry.name = this.query;
-      }
       this.$router
         .push({
+          path: this.selectedCountry ? `/countries/${this.selectedCountry.id}` : '/countries',
           query: {
             query:
               this.selectedCountry || !this.query || !this.query.length > 0

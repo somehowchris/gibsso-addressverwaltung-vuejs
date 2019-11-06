@@ -17,11 +17,7 @@
         <div class="collapse navbar-collapse" id="navbar-default">
           <div class="navbar-collapse-header">
             <div class="row">
-              <div class="col-6 collapse-brand">
-                <a href="index.html">
-                  <img src="assets/img/brand/blue.png" />
-                </a>
-              </div>
+              <div class="col-6 collapse-brand"></div>
               <div class="col-6 collapse-close">
                 <button
                   type="button"
@@ -41,13 +37,13 @@
 
           <ul class="navbar-nav ml-lg-auto">
             <li class="nav-item">
-              <router-link to="people" tag="a" class="nav-link">Personenverwaltung</router-link>
+              <router-link to="/people" tag="a" class="nav-link">Personenverwaltung</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="towns" tag="a" class="nav-link" href="#">Ortsverwaltung</router-link>
+              <router-link to="/towns" tag="a" class="nav-link" href="#">Ortsverwaltung</router-link>
             </li>
             <li class="nav-item">
-              <router-link to="countries" tag="a" class="nav-link" href="#">Landverwaltung</router-link>
+              <router-link to="/countries" tag="a" class="nav-link" href="#">Landverwaltung</router-link>
             </li>
           </ul>
         </div>
