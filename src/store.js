@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-expressions */
 /* eslint-disable no-void */
 /* eslint-disable max-len */
 /* eslint-disable no-return-assign */
@@ -13,9 +14,8 @@ export default new Vuex.Store({
   state: {
     countries: [],
     people: {
-      data: [],
       filter: {},
-      lastVisited: 'e60cd79a-f3ee-415a-a894-d4f918dd6801',
+      lastVisited: undefined,
     },
     towns: {
       size: 25,
@@ -38,6 +38,8 @@ export default new Vuex.Store({
     },
     replaceTown: (state, town) => state.towns.data = state.towns.data.map(el => (el.id === town.id ? town : el)),
     removeTown: (state, id) => state.towns.data = state.towns.data.filter(el => el.id !== id),
+    setLastVisited: (state, id) => state.people.lastVisited = id,
+    setPeopleFilter: (state, filters) => state.people.filter = filters,
   },
   actions: {
     deleteTown({ commit }, id) {
@@ -46,9 +48,17 @@ export default new Vuex.Store({
       });
     },
     async loadCountries({ commit }) {
-      const countries = CountryService.getCountries();
-      commit('setCountries', countries);
+      const countries = await CountryService.getCountries();
       commit('setCountries', await countries);
+
+      return countries;
+    },
+    async loadTowns({ commit }) {
+      const towns = await TownService.getTowns(0, Number.MAX_VALUE, '');
+      commit('addTowns', towns.results);
+      commit('setTownSearch', '');
+      commit('setTotalTowns', towns.total);
+      return towns;
     },
     async loadPerson(store, { id, filter }) {
       return PeopleService.loadPerson(id, filter);

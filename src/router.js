@@ -38,6 +38,12 @@ export default new Router({
       path: '/people',
       name: 'People',
       component: () => import('./views/People/People.vue'),
+      children: [
+        {
+          path: ':id',
+          component: () => import('./views/People/People.vue'),
+        },
+      ],
     },
   ],
 });

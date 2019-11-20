@@ -6,6 +6,11 @@ const getTowns = async (offset = 0, size = 25, search = '') => {
   return data;
 };
 
+const getAllTowns = async () => {
+  const { data } = await httpService.get('/towns');
+  return data;
+};
+
 const getTown = async (id) => {
   const { data } = await httpService.get(`/towns/${id}`);
   return data;
@@ -29,4 +34,5 @@ export default {
   updateTown,
   deleteTown,
   getTown,
+  getAllTowns,
 };
